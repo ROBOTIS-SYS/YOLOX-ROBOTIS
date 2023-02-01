@@ -10,9 +10,12 @@ from loguru import logger
 import cv2
 
 import torch
+# import sys
+# sys.path.append("..")
 
 from yolox.data.data_augment import ValTransform
 from yolox.data.datasets import COCO_CLASSES
+from yolox.data.datasets import ROBOTIS_CLASSES
 from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess, vis
 
@@ -303,12 +306,16 @@ def main(exp, args):
         decoder = None
 
     predictor = Predictor(
-        model, exp, COCO_CLASSES, trt_file, decoder,
+        model, exp, ROBOTIS_CLASSES, trt_file, decoder,
         args.device, args.fp16, args.legacy,
     )
     current_time = time.localtime()
     if args.demo == "image":
-        image_demo(predictor, vis_folder, args.path, current_time, args.save_result)
+        from glob import glob
+        file_list = glob("/home/robotis-workstation3/ai/ROBOTIS/coco_format/val/*.jpg")
+        # print(file_list)
+        for path in file_list:
+            image_demo(predictor, vis_folder, path, current_time, args.save_result)
     elif args.demo == "video" or args.demo == "webcam":
         imageflow_demo(predictor, vis_folder, current_time, args)
 

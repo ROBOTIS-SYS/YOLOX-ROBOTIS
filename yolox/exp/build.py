@@ -8,6 +8,7 @@ import sys
 
 
 def get_exp_by_file(exp_file):
+    print(exp_file)
     try:
         sys.path.append(os.path.dirname(exp_file))
         current_exp = importlib.import_module(os.path.basename(exp_file).split(".")[0])
@@ -33,6 +34,7 @@ def get_exp(exp_file=None, exp_name=None):
         exp_file (str): file path of experiment.
         exp_name (str): name of experiment. "yolo-s",
     """
+    print(exp_file, exp_name)
     assert (
         exp_file is not None or exp_name is not None
     ), "plz provide exp file or exp name."

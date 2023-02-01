@@ -260,13 +260,3 @@ class COCODataset(Dataset):
         if self.preproc is not None:
             img, target = self.preproc(img, target, self.input_dim)
         return img, target, img_info, img_id
-
-
-# if __name__ == "__main__":
-#     data_dir = "datasets/ROBOTIS/coco_format/annotations"
-#     train_ann = "instance_train.json"
-#     val_ann = "instance_val.json"
-#     coco = COCODataset(data_dir, train_ann, 'train', 640)
-
-#     for i in range(1, 100):
-#         coco
