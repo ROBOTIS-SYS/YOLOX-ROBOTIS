@@ -25,13 +25,18 @@ link_directories(/usr/local/cuda/lib64)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Ofast -Wfatal-errors -D_MWAITXINTRIN_H_INCLUDED")
 
-find_package(OpenCV)
+find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_executable(yolox ${PROJECT_SOURCE_DIR}/yolox.cpp)
 target_link_libraries(yolox nvinfer)
 target_link_libraries(yolox cudart)
 target_link_libraries(yolox ${OpenCV_LIBS})
+
+add_executable(yolox_local ${PROJECT_SOURCE_DIR}/yolox_orin_locate.cpp)
+target_link_libraries(yolox_local nvinfer)
+target_link_libraries(yolox_local cudart)
+target_link_libraries(yolox_local ${OpenCV_LIBS})
 
 add_definitions(-O2 -pthread)
 

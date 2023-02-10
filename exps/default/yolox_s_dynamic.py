@@ -11,9 +11,8 @@ import torch
 from yolox.exp import Exp as MyExp
 
 # operation
-# python3 tools/train.py -f exps/default/yolox_s_locate_detect.py -d 2 -b 16 --fp16 -o --cache
-# python3 tools/train.py -f exps/default/yolox_s_locate_detect.py -c YOLOX_outpus/yolox_s_locate_detect/best_ckpt.pth -d 2 -b 16 --fp16 -o --cache
-
+# python3 tools/train.py -f exps/default/yolox_s_dynamic.py -d 2 -b 16 --fp16 -o --cache
+# python3 tools/train.py -f exps/default/yolox_s_dynamic.py -c YOLOX_outpus/yolox_s_dynamic/best_ckpt.pth -d 2 -b 16 --fp16 -o --cache
 
 class Exp(MyExp):
     def __init__(self):
@@ -21,8 +20,8 @@ class Exp(MyExp):
         self.depth = 0.33
         self.width = 0.50
 
-        self.num_classes = 8
-        self.data_dir = "/home/robotis-workstation3/ai/dataset/EV_DATA/convert_data"
+        self.num_classes = 2
+        self.data_dir = "/home/robotis-workstation3/ai/dataset/robotis_dynamic/convert_data"
         self.train_ann = "instance_train.json"
         self.val_ann = "instance_val.json"
         self.test_ann = "instance_val.json"
@@ -58,7 +57,6 @@ class Exp(MyExp):
                 "disk": Caching imgs to disk for fast training.
                 None: Do not use cache, in this case cache_data is also None.
         """
-        print("thi")
         from yolox.data import (
             COCODataset,
             TrainTransform,
@@ -102,7 +100,7 @@ class Exp(MyExp):
             mixup_scale=self.mixup_scale,
             shear=self.shear,
             enable_mixup=self.enable_mixup,
-            # mosaic_prob=self.mosaic_prob,
+            mosaic_prob=self.mosaic_prob,
             mixup_prob=self.mixup_prob,
         )
 

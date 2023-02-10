@@ -16,6 +16,8 @@ import torch
 from yolox.data.data_augment import ValTransform
 from yolox.data.datasets import COCO_CLASSES
 from yolox.data.datasets import ROBOTIS_CLASSES
+from yolox.data.datasets import LOCATION_DETECT_CLASSES
+from yolox.data.datasets import DYNAMIC_CLASSES
 from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess, vis
 
@@ -195,6 +197,7 @@ def image_demo(predictor, vis_folder, path, current_time, save_result):
     files.sort()
     for image_name in files:
         outputs, img_info = predictor.inference(image_name)
+        print(outputs)
         result_image = predictor.visual(outputs[0], img_info, predictor.confthre)
         if save_result:
             save_folder = os.path.join(
@@ -306,13 +309,14 @@ def main(exp, args):
         decoder = None
 
     predictor = Predictor(
-        model, exp, ROBOTIS_CLASSES, trt_file, decoder,
+        model, exp, DYNAMIC_CLASSES, trt_file, decoder,
         args.device, args.fp16, args.legacy,
     )
     current_time = time.localtime()
     if args.demo == "image":
         from glob import glob
-        file_list = glob("/home/robotis-workstation3/ai/ROBOTIS/coco_format/val/*.jpg")
+        file_list = glob("/home/robotis-workstation3/ai/dataset/robotis_dynamic/convert_data/val/*.jpg")
+        # file_list = glob("/home/robotis-workstation3/ai/dataset/EV_DATA/convert_data/val/*.jpg")
         # print(file_list)
         for path in file_list:
             image_demo(predictor, vis_folder, path, current_time, args.save_result)
