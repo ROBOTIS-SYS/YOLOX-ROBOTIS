@@ -178,7 +178,8 @@ class Predictor(object):
         output = output.cpu()
 
         bboxes = output[:, 0:4]
-
+        x = torch.max(bboxes)
+        x2 = torch.min(bboxes)
         # preprocessing: resize
         bboxes /= ratio
 
@@ -310,7 +311,7 @@ def main(exp, args):
 
     predictor = Predictor(
         model, exp, DYNAMIC_CLASSES, trt_file, decoder,
-        args.device, args.fp16, args.legacy,
+        args.device, args.fp16, args.legacy
     )
     current_time = time.localtime()
     if args.demo == "image":

@@ -11,8 +11,8 @@ import torch
 from yolox.exp import Exp as MyExp
 
 # operation
-# python3 tools/train.py -f exps/default/yolox_s_dynamic.py -d 2 -b 8 --fp16 -o --cache
-# python3 tools/train.py -f exps/default/yolox_s_dynamic.py -c YOLOX_outpus/yolox_s_dynamic/best_ckpt.pth -d 2 -b 8 --fp16 -o --cache
+# python3 tools/train.py -f exps/default/yolox_s_dynamic.py -d 2 -b 16 --fp16 -o --c                                      ache
+# python3 tools/train.py -f exps/default/yolox_s_dynamic.py -c YOLOX_outpus/yolox_s_dynamic/best_ckpt.pth -d 2 -b 16 --fp16 -o --cache
 
 class Exp(MyExp):
     def __init__(self):

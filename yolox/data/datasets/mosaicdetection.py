@@ -156,7 +156,7 @@ class MosaicDetection(Dataset):
             mmix.permute(2, 0, 1)
             mmix = tf(mmix)
             # mix.show()
-            mmix.save('mix.jpg','JPEG')
+            # mmix.save('mix.jpg','JPEG')
             img_info = (mix_img.shape[1], mix_img.shape[0])
 
             # -----------------------------------------------------------------

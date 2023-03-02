@@ -11,8 +11,8 @@ import torch
 from yolox.exp import Exp as MyExp
 
 # operation
-# python3 tools/train.py -f exps/default/yolox_s_dynamic.py -d 2 -b 8 --fp16 -o --cache
-# python3 tools/train.py -f exps/default/yolox_s_dynamic.py -c YOLOX_outpus/yolox_s_dynamic/best_ckpt.pth -d 2 -b 8 --fp16 -o --cache
+# python3 tools/train.py -f exps/default/yolox_s_dynamic_mot.py -d 2 -b 16 --fp16 -o --cache
+# python3 tools/train.py -f exps/default/yolox_s_dynamic_mot.py -c YOLOX_outpus/yolox_s_dynamic_mot/best_ckpt.pth -d 2 -b 16 --fp16 -o --cache
 
 class Exp(MyExp):
     def __init__(self):
@@ -21,10 +21,10 @@ class Exp(MyExp):
         self.width = 0.50
 
         self.num_classes = 1
-        self.data_dir = "/home/robotis-workstation3/ai/dataset/robotis_dynamic/convert_data"
-        self.train_ann = "instance_train.json"
-        self.val_ann = "instance_val.json"
-        self.test_ann = "instance_val.json"
+        self.data_dir = "/home/robotis-workstation3/ai/YOLOX-ROBOTIS/datasets/mot"
+        self.train_ann = "train.json"
+        self.val_ann = "test.json"
+        # self.test_ann = "test.json"
         self.data_num_workers = 0
 
         # self.flip_prob = 0.0
@@ -131,10 +131,11 @@ class Exp(MyExp):
     def get_eval_loader(self, batch_size, is_distributed, testdev=False, legacy=False, cache_type: str = "ram"):
         from yolox.data import COCODataset, ValTransform
 
+        # name="val" if not testdev else "test",
         valdataset = COCODataset(
             data_dir=self.data_dir,
             json_file=self.val_ann if not testdev else self.test_ann,
-            name="val" if not testdev else "test",
+            name="test" if not testdev else "test",
             img_size=self.test_size,
             preproc=ValTransform(legacy=legacy),
             cache=True,

@@ -6,6 +6,8 @@
 #include <vector>
 #include <opencv2/opencv.hpp>
 #include <dirent.h>
+#include "time.h"
+
 #include "NvInfer.h"
 #include "cuda_runtime_api.h"
 #include "logging.h"
@@ -22,17 +24,23 @@
     } while (0)
 
 #define DEVICE 0 // GPU id
-#define NMS_THRESH 0.45
-#define BBOX_CONF_THRESH 0.3
+// #define NMS_THRESH 0.45
+// #define BBOX_CONF_THRESH 0.3
+
+#define NMS_THRESH 0.6
+#define BBOX_CONF_THRESH 0.7
+
 
 using namespace nvinfer1;
 
 // stuff we know about the network and the input/output blobs
 static const int INPUT_W = 640;
 static const int INPUT_H = 640;
-static const int NUM_CLASSES = 8;
-const char *INPUT_BLOB_NAME = "images";
-const char *OUTPUT_BLOB_NAME = "output";
+static const int NUM_CLASSES = 1;
+// const char *INPUT_BLOB_NAME = "images";
+// const char *OUTPUT_BLOB_NAME = "output";
+const char* INPUT_BLOB_NAME = "input_0";
+const char* OUTPUT_BLOB_NAME = "output_0";
 static Logger gLogger;
 
 cv::Mat static_resize(cv::Mat &img)
@@ -357,14 +365,7 @@ const float color_list[80][3] =
 static void draw_objects(const cv::Mat &bgr, const std::vector<Object> &objects, std::string f)
 {
     static const char *class_names[] = {
-        "ED_open",
-        "ED_close",
-        "ED_moving",
-        "PI",
-        "CPI",
-        "H_up",
-        "H_down",
-        "H_off",
+        "human",
     };
 
     cv::Mat image = bgr.clone();
@@ -413,10 +414,9 @@ static void draw_objects(const cv::Mat &bgr, const std::vector<Object> &objects,
                     cv::FONT_HERSHEY_SIMPLEX, 0.4, txt_color, 1);
     }
 
-    cv::imwrite("det_res.jpg", image);
-    fprintf(stderr, "save vis file\n");
-    /* cv::imshow("image", image); */
-    /* cv::waitKey(0); */
+    // cv::imwrite("det_res.jpg", image);
+    cv::imshow("result", image);
+    cv::waitKey(1);
 }
 
 void doInference(IExecutionContext &context, float *input, float *output, const int output_size, cv::Size input_shape)
@@ -528,8 +528,8 @@ int main(int argc, char **argv)
         int img_h = frame.rows;
         cv::Mat pr_img = static_resize(frame);
         std::cout << "blob image" << std::endl;
-        cv::imshow("fd", pr_img);
-        cv::waitKey(0);
+        // cv::imshow("fd", pr_img);
+        // cv::waitKey(1);
 
         float *blob;
         blob = blobFromImage(pr_img);
@@ -544,8 +544,6 @@ int main(int argc, char **argv)
         std::vector<Object> objects;
         decode_outputs(prob, objects, scale, img_w, img_h);
         draw_objects(frame, objects, input_image_path);
-        delete blob;
-
     }
 
     // img file load
