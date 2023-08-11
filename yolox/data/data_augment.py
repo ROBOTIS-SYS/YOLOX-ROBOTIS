@@ -15,7 +15,16 @@ import random
 import cv2
 import numpy as np
 
-from yolox.utils import xyxy2cxcywh
+# from yolox.utils import xyxy2cxcywh
+
+
+
+def xyxy2cxcywh(bboxes):
+    bboxes[:, 2] = bboxes[:, 2] - bboxes[:, 0]
+    bboxes[:, 3] = bboxes[:, 3] - bboxes[:, 1]
+    bboxes[:, 0] = bboxes[:, 0] + bboxes[:, 2] * 0.5
+    bboxes[:, 1] = bboxes[:, 1] + bboxes[:, 3] * 0.5
+    return bboxes
 
 
 def augment_hsv(img, hgain=5, sgain=30, vgain=30):

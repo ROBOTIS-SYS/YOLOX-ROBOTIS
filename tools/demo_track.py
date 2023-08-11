@@ -29,7 +29,7 @@ def make_parser():
 
     parser.add_argument(
         #"--path", default="./datasets/mot/train/MOT17-05-FRCNN/img1", help="path to images or video"
-        "--path", default="./assets/2023_2_14_15_1_11.avi", help="path to images or video"
+        "--path", default="./assets/demo1.avi", help="path to images or video"
     )
     parser.add_argument("--camid", type=int, default=0, help="webcam demo camera id")
     parser.add_argument(
@@ -243,7 +243,7 @@ class Predictor(object):
             t0 = time.time()
             outputs = self.model(img)
             if self.decoder is not None:
-                print("decode in!!!!!!!!!!!!!!!!!!!")
+                # print("decode in!!!!!!!!!!!!!!!!!!!")
                 outputs = self.decoder(outputs, dtype=outputs.type())
             outputs = postprocess(
                 outputs, self.num_classes, self.confthre,
@@ -420,7 +420,7 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
         ret_val, frame = cap.read()
         if ret_val:
             outputs, img_info = predictor.inference(frame)
-            print(outputs[0])
+            # print(outputs[0])
             result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
             if args.save_result:
                 vid_writer.write(result_frame)

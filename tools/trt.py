@@ -62,15 +62,15 @@ def main():
     model_trt = torch2trt(
         model,
         [x],
-        fp16_mode=True,
+        fp16_mode=False,
         log_level=trt.Logger.INFO,
         max_workspace_size=(1 << args.workspace),
         max_batch_size=args.batch,
     )
-    torch.save(model_trt.state_dict(), os.path.join(file_name, "model_trt.pth"))
+    torch.save(model_trt.state_dict(), os.path.join(file_name, "model_trt_v_0.2_fp32.pth"))
     logger.info("Converted TensorRT model done.")
-    engine_file = os.path.join(file_name, "model_trt.engine")
-    engine_file_demo = os.path.join("demo", "TensorRT", "cpp", "model_trt.engine")
+    engine_file = os.path.join(file_name, "model_trt_v_0.2_fp32.pth")
+    engine_file_demo = os.path.join("demo", "TensorRT", "cpp", "model_trt_v_0.2_fp32.pth")
     with open(engine_file, "wb") as f:
         f.write(model_trt.engine.serialize())
 

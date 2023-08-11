@@ -14,18 +14,14 @@ from yolox.exp import Exp as MyExp
 class Exp(MyExp):
     def __init__(self):
         super(Exp, self).__init__()
-        self.depth = 0.33
-        self.width = 0.50
-
+        self.depth = 1.0
+        self.width = 1.0
         self.num_classes = 108
-        self.data_dir = "datasets/ROBOTIS/coco_format"
+        self.data_dir = "/home/robotis-workstation3/ai/dataset/robotis_thyssen_indicator_coco"
         self.train_ann = "instance_train.json"
         self.val_ann = "instance_val.json"
         self.test_ann = "instance_val.json"
         self.data_num_workers = 0
-
-        self.flip_prob = 0.0
-        # self.max_epoch = 500
         self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0]
 
     def create_cache_dataset(self, cache_type: str = "ram"):
@@ -33,6 +29,7 @@ class Exp(MyExp):
         self.cache_dataset = COCODataset(
             data_dir=self.data_dir,
             json_file=self.train_ann,
+            name='train',
             img_size=self.input_size,
             preproc=TrainTransform(
                 max_labels=50,
@@ -53,7 +50,6 @@ class Exp(MyExp):
                 "disk": Caching imgs to disk for fast training.
                 None: Do not use cache, in this case cache_data is also None.
         """
-        # print("thi")
         from yolox.data import (
             COCODataset,
             TrainTransform,
@@ -97,7 +93,7 @@ class Exp(MyExp):
             mixup_scale=self.mixup_scale,
             shear=self.shear,
             enable_mixup=self.enable_mixup,
-            # mosaic_prob=self.mosaic_prob,
+            mosaic_prob=self.mosaic_prob,
             mixup_prob=self.mixup_prob,
         )
 
@@ -125,7 +121,7 @@ class Exp(MyExp):
         return train_loader
 
 
-    def get_eval_loader(self, batch_size, is_distributed, testdev=False, legacy=False):
+    def get_eval_loader(self, batch_size, is_distributed, testdev=False, legacy=False, cache_type: str = "ram"):
         from yolox.data import COCODataset, ValTransform
 
         valdataset = COCODataset(
@@ -134,6 +130,8 @@ class Exp(MyExp):
             name="val" if not testdev else "test",
             img_size=self.test_size,
             preproc=ValTransform(legacy=legacy),
+            cache=True,
+            cache_type=cache_type,
         )
 
         if is_distributed:
