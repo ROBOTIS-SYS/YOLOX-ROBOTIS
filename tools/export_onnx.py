@@ -83,10 +83,12 @@ def main():
         ckpt = ckpt["model"]
     model.load_state_dict(ckpt)
     model = replace_module(model, nn.SiLU, SiLU)
+    print(args.decode_in_inference)
     model.head.decode_in_inference = args.decode_in_inference
 
     logger.info("loading checkpoint done.")
     dummy_input = torch.randn(args.batch_size, 3, exp.test_size[0], exp.test_size[1])
+    print(exp.test_size[0], exp.test_size[1], args.dynamic)
 
     torch.onnx._export(
         model,

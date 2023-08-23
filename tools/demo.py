@@ -10,9 +10,18 @@ from loguru import logger
 import cv2
 
 import torch
+# import sys
+# sys.path.append("..")
 
 from yolox.data.data_augment import ValTransform
 from yolox.data.datasets import COCO_CLASSES
+from yolox.data.datasets import ROBOTIS_CLASSES
+from yolox.data.datasets import LOCATION_DETECT_CLASSES
+from yolox.data.datasets import DYNAMIC_CLASSES
+from yolox.data.datasets import DYNAMIC_BODY_HEAD_CLASSES
+from yolox.data.datasets import ROBOTIS_THYSSEN
+from yolox.data.datasets import ROBOTIS_THYSSEN_INDICATOR
+from yolox.data.datasets import voc_robotis_classes
 from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess, vis
 
@@ -173,7 +182,8 @@ class Predictor(object):
         output = output.cpu()
 
         bboxes = output[:, 0:4]
-
+        x = torch.max(bboxes)
+        x2 = torch.min(bboxes)
         # preprocessing: resize
         bboxes /= ratio
 
@@ -303,12 +313,20 @@ def main(exp, args):
         decoder = None
 
     predictor = Predictor(
-        model, exp, COCO_CLASSES, trt_file, decoder,
-        args.device, args.fp16, args.legacy,
+        model, exp, voc_robotis_classes.VOC_ROBOTIS_CLASSES, trt_file, decoder,
+        args.device, args.fp16, args.legacy
     )
     current_time = time.localtime()
     if args.demo == "image":
-        image_demo(predictor, vis_folder, args.path, current_time, args.save_result)
+        from glob import glob
+
+        file_list = glob("/mnt/hdd/ROBOTIS/hdu/Robotis/train_data_2023_8_4_10/test2/*.jpg")
+        # file_list = glob(args.path)
+        # file_list = glob("/home/robotis-workstation3/ai/dataset/robotis_thyssen_indicator_coco/test/*.jpg")
+        # file_list = glob("/home/robotis-workstation3/ai/dataset/EV_DATA/convert_data/val/*.jpg")
+        # print(file_list)
+        for path in file_list:
+            image_demo(predictor, vis_folder, path, current_time, args.save_result)
     elif args.demo == "video" or args.demo == "webcam":
         imageflow_demo(predictor, vis_folder, current_time, args)
 

@@ -45,7 +45,7 @@ class COCODataset(Dataset):
         self,
         data_dir=None,
         json_file="instances_train2017.json",
-        name="train2017",
+        name="val2017",
         img_size=(416, 416),
         preproc=None,
         cache=False,
@@ -194,6 +194,8 @@ class COCODataset(Dataset):
             if "file_name" in im_ann
             else "{:012}".format(id_) + ".jpg"
         )
+        # file_name = file_name.split('.')[0]
+        # print(file_name)
 
         return (res, img_info, resized_info, file_name)
 
@@ -258,3 +260,13 @@ class COCODataset(Dataset):
         if self.preproc is not None:
             img, target = self.preproc(img, target, self.input_dim)
         return img, target, img_info, img_id
+
+
+# if __name__ == "__main__":
+#     data_dir = "datasets/ROBOTIS/coco_format/annotations"
+#     train_ann = "instance_train.json"
+#     val_ann = "instance_val.json"
+#     coco = COCODataset(data_dir, train_ann, 'train', 640)
+
+#     for i in range(1, 100):
+#         coco

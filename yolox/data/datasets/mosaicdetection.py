@@ -11,7 +11,9 @@ from yolox.utils import adjust_box_anns, get_local_rank
 
 from ..data_augment import random_affine
 from .datasets_wrapper import Dataset
-
+from PIL import Image
+import torchvision.transforms as transforms
+import torch
 
 def get_mosaic_coordinate(mosaic_image, mosaic_index, xc, yc, w, h, input_h, input_w):
     # TODO update doc
@@ -138,13 +140,23 @@ class MosaicDetection(Dataset):
             # -----------------------------------------------------------------
             # CopyPaste: https://arxiv.org/abs/2012.07177
             # -----------------------------------------------------------------
+            tf = transforms.ToPILImage()
             if (
                 self.enable_mixup
                 and not len(mosaic_labels) == 0
                 and random.random() < self.mixup_prob
             ):
                 mosaic_img, mosaic_labels = self.mixup(mosaic_img, mosaic_labels, self.input_dim)
+
+                mosaic = tf(mosaic_img)
+                mosaic.save('mosaic.jpg','JPEG')
+                # mosaic.imshow()
             mix_img, padded_labels = self.preproc(mosaic_img, mosaic_labels, self.input_dim)
+            mmix = torch.tensor(mix_img)
+            mmix.permute(2, 0, 1)
+            mmix = tf(mmix)
+            # mix.show()
+            # mmix.save('mix.jpg','JPEG')
             img_info = (mix_img.shape[1], mix_img.shape[0])
 
             # -----------------------------------------------------------------

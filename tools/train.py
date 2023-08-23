@@ -110,8 +110,8 @@ def main(exp: Exp, args):
         )
 
     # set environment variables for distributed training
-    configure_nccl()
-    configure_omp()
+    # configure_nccl()
+    # configure_omp()
     cudnn.benchmark = True
 
     trainer = exp.get_trainer(args)
