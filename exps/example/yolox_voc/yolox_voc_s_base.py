@@ -20,10 +20,15 @@ class Exp(MyExp):
 
         # YOLOX-ROBOTIS/dataset/voc 내에 있는 데이터(사이트) 이름을 의미
         # 경로 설정하려고 작성하는 것
-        self.data_folder = 'robotis_thyssen'
+        self.data_folder = 'Robotis'
 
-        self.image_sets = [('1', 'train')] # 학습에 사용할 train.txt 파일 경로 작성 ex) 'robotis_thyssen/1/train.txt'
-        self.test_sets = [('1', 'val')] # 학습에 사용할 val.txt 파일 경로 작성 ex) 'robotis_thyssen/1/val.txt'
+        # 학습에 사용할 train.txt 파일 경로 작성 
+        # ex) 'Robotis/train_data_2023_8_4_10/train.txt'
+        self.image_sets = [('train_data_2023_8_4_10', 'train')] # 학습에 사용할 train.txt 파일 경로 작성 ex) 'robotis_thyssen/1/train.txt'
+
+        # 학습에 사용할 val.txt 파일 경로 작성
+        # ex) 'Robotis/train_data_2023_8_4_10/val.txt'
+        self.test_sets = [('train_data_2023_8_4_10', 'val')]
 
         # ---------- transform config ------------ #
         # augmentation 적용 비율을 의미
